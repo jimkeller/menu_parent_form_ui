@@ -14,6 +14,7 @@ function SelectExtractor( settings ) {
 	var select_box;
 	var select_boxes = window.document.querySelectorAll( this.setting('selectors.select_input_original').toString() );
 	var select_box_id = '';
+	var select_box_extracted_hide = false;
 
 	this.option_data = {}; 
 	this.option_data_top = {};
@@ -28,13 +29,22 @@ function SelectExtractor( settings ) {
 			select_box_id = 'se_' + SelectExtractor.unique_index_get().toString();
 			select_boxes[i].setAttribute('data-select-extractor-id', select_box_id );
 			
-			this.select_options_extract( select_boxes[i] );
-		
-			this.select_box_create( this.option_data_top, 0, select_box_id );
-
+			this.select_options_extract( select_boxes[i] );		
+			
 			if ( this.setting('select_input_original_hide') ) {
 				this.select_box_original_hide( select_boxes[i] );
+			}	
+
+			if ( select_boxes[i].selectedIndex > 0 ) { //@TODO: this is very Drupal-specific - checking if something is selected by seeing if the first option is chosen
+				
+				this.select_box_change_link_initialize( select_boxes[i] );
+				select_box_extracted_hide = true;
+
 			}
+
+			this.select_box_create( this.option_data_top, 0, select_box_id, { hide: select_box_extracted_hide } );
+
+			
 		}
 	}
 	else {
@@ -42,6 +52,81 @@ function SelectExtractor( settings ) {
 	}
 
 
+
+}
+
+SelectExtractor.prototype.select_box_change_link_initialize = function( select_box ) {
+	try {
+
+				var me = this;
+				var select_box_container = document.querySelector( this.setting( 'selectors.select_box_container') );
+				var select_box_id = select_box.getAttribute('data-select-extractor-id');
+				var selection_label = document.createElement('div');
+				var choose_new_link = document.createElement('a');
+
+				selection_label.innerHTML = select_box.options[ select_box.selectedIndex ].text;
+				selection_label.classList.add('select-box-label-current');
+				selection_label.setAttribute('data-select-original-id', select_box_id);
+
+				choose_new_link.addEventListener('click',
+					function() {
+						me.select_box_display_extracted( select_box_id );
+						me.select_box_change_link_hide( select_box_id );
+					}
+				);
+
+				choose_new_link.setAttribute('data-select-original-id', select_box_id);
+				choose_new_link.classList.add('select-box-change-link');
+				choose_new_link.style.display = 'block';
+				choose_new_link.style.cursor = 'pointer';
+				choose_new_link.innerHTML = 'Change';
+				
+				select_box_container.appendChild( selection_label );
+				select_box_container.appendChild( choose_new_link );
+
+	}
+	catch(e) {
+		throw e;
+	}
+}
+
+SelectExtractor.prototype.select_box_change_link_hide = function( select_box_id ) {	
+	try {
+
+		//
+		// @TODO - finding stuff by extracted select ID should be a method...
+		//
+		var link = document.querySelector( '.select-box-change-link[data-select-original-id="' + select_box_id.toString() + '"]' );
+
+		if ( link ) {
+			link.style.display = 'none';
+		}
+
+		var label = document.querySelector( '.select-box-label-current[data-select-original-id="' + select_box_id.toString() + '"]' );
+
+		if ( label ) {
+			label.style.display = 'none';
+		}
+
+	}
+	catch(e) {
+		throw e;
+	}
+
+}
+
+SelectExtractor.prototype.select_box_display_extracted = function( select_box_id_original ) {
+
+	try {
+		var select_boxes_extracted = document.querySelectorAll( 'select[data-select-original-id="' + select_box_id_original.toString() + '"]' );
+
+		for( var i = 0; i < select_boxes_extracted.length; i++ ) {
+			select_boxes_extracted[i].style.display='block';			
+		}
+	}
+	catch( e ) {
+		throw e;
+	}
 
 }
 
@@ -61,9 +146,11 @@ SelectExtractor.prototype.select_box_original_hide = function( select_box ) {
 	}
 }
 
-SelectExtractor.prototype.select_box_create = function( option_data, level, select_original_id ) {
+SelectExtractor.prototype.select_box_create = function( option_data, level, select_original_id, method_options ) {
 
 	try {
+
+		method_options = method_options || {};
 
 		var new_select = document.createElement('select');
 		var me = this;
@@ -80,6 +167,11 @@ SelectExtractor.prototype.select_box_create = function( option_data, level, sele
 		new_select.setAttribute('data-select-level', level);
 		new_select.setAttribute('data-select-original-id', select_original_id);
 		new_select.setAttribute('id', select_original_id + '_' + level.toString() );
+
+		if ( typeof(method_options.hide) != 'undefined' && method_options.hide == true ) {
+			new_select.style.display='none';
+		}
+
 		new_select.addEventListener('change',
 			function() {
 				me.select_handle_change( new_select );
