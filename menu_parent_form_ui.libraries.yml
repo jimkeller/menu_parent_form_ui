@@ -1,0 +1,10 @@
+menu_parent_form_ui.base:
+  version: VERSION
+  js:
+    js/menu_parent_form_ui.js: {}
+    js/libs/select_extractor.js: {}
+  css:
+    theme:
+      css/menu_parent_form_ui.css: {}
+  dependencies:
+    - core/drupalSettings

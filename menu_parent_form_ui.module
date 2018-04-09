@@ -1,0 +1,13 @@
+<?php
+
+
+function menu_parent_form_ui_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+	
+	if ( $form_id == 'menu_link_content_menu_link_content_form' || (isset($form['#attributes']['class'][1]) && $form['#attributes']['class'][1] == 'node-form')) {
+    $form['#attached']['library'][] = 'menu_parent_form_ui/menu_parent_form_ui.base';    
+  }
+
+}
+
+
+?>

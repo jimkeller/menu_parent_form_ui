@@ -1,0 +1,5 @@
+name: Menu Parent Form UI
+description: Adjusts the dropdown for choosing parent menu items to be a series of select boxes instead of a single combined list
+package: Widgets
+type: module
+core: 8.x
