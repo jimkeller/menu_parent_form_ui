@@ -16,7 +16,7 @@ Just enable the module, and you should see cascading/hierarchical menus for choo
 
 # Notes/Future Support
 
-This is a client-side module that uses javascript to extract the menu levels by looking at the number of dashes at the beginning of the option text (e.g. "--About" vs "----Our History"). Drupal includes the dashes by default when printing this option list, but this approach is pretty brittle. It will break if Drupal changes the structure of that options list in the future and removes the dashes. (I'm not sure why this would happen, but just noting it here).
+This is a client-side module that uses javascript to extract the menu levels by looking at the number of dashes at the beginning of the option text (e.g. "--About" vs "----Our History"). Drupal includes the dashes by default when printing this option list, but this approach relies on that always being the case. It will break if Drupal changes the structure of that options list in the future and removes the dashes. (I'm not sure why this would happen, but just noting it here).
 
 This module should be a temporary solution for the problem; something better is needed. Probably this should be merged with [Client Side Hierarchical Select](https://www.drupal.org/project/cshs). They accomplish nearly the same thing, though cshs is only for taxonomy terms as of this writing.
 
