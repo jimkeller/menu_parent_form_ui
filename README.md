@@ -1,6 +1,10 @@
+[menu_parent_form_ui_screenshot]: https://jimkeller.github.io/menu_parent_form_ui/images/drupal-menu-parent-form-ui.png
+
 # Menu Parent Form UI
 
 A module for Drupal 8
+
+![Drupal better menu selector for big menus screenshot][menu_parent_form_ui_screenshot]
 
 A better user interface for choosing parent menu items in Drupal. This is a client-side solution that applies a hierarchical select feature to the choosing of parent menu items in Drupal 8. 
 
